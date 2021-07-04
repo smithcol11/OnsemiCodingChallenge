@@ -102,6 +102,11 @@ ApplicationWindow {
                         listModel.clear()
                         global = true
                         yourName = "Global"
+                        var loadRoom = {
+                          type: "load",
+                          room: yourName
+                        }
+                        socket.sendTextMessage(JSON.stringify(loadRoom));
                     }
                   }
                 }
@@ -121,6 +126,14 @@ ApplicationWindow {
                         global = false;
                         yourName = this.text
                         console.log(yourName)
+                        var chat;
+                        if(myName <= yourName) chat = (myName + yourName)
+                        else chat = (yourName + myName)
+                        var loadRoom = {
+                          type: "load",
+                          room: chat
+                        }
+                        socket.sendTextMessage(JSON.stringify(loadRoom));
                     }
                 }
                 ScrollBar.vertical: ScrollBar{}
@@ -160,7 +173,7 @@ ApplicationWindow {
                         id: listModel
                     }
                     delegate: Column {
-                        readonly property bool sentByMe: sender.text === "Me"
+                        readonly property bool sentByMe: sender.text === myName || sender.text === "Me"
                         anchors.right: sentByMe ? msgList.contentItem.right : undefined
                         spacing: 5
 
@@ -198,9 +211,10 @@ ApplicationWindow {
                             id: timestamp
                             width: Math.min(time.implicitWidth)
                             Text { id: time;
+                                text: date
                                 color: "lightgrey";
                                 font.italic: true;
-                                text: date }
+                            }
                             anchors.right: sentByMe ? parent.right : undefined
                         }
                     }
@@ -226,24 +240,28 @@ ApplicationWindow {
                             onClicked: {
                                 console.log(inputMsg.text)
                                 if(global === true) {
+                                    var locale = new Date().toLocaleTimeString(Qt.locale())
                                     var msg = {
                                       type: "msg",
                                       user: myName,
-                                      text: inputMsg.text
+                                      text: inputMsg.text,
+                                      time: locale
                                     }
                                     socket.sendTextMessage(JSON.stringify(msg))
                                 }
                                 else {
+                                    locale = new Date().toLocaleTimeString(Qt.locale())
                                     room = {
-                                        type: "room",
+                                        type: "pm",
                                         sender: myName,
                                         reciever: yourName,
-                                        text: inputMsg.text
+                                        text: inputMsg.text,
+                                        time: locale
                                     }
                                     socket.sendTextMessage(JSON.stringify(room))
                                 }
 
-                                var locale = new Date().toLocaleTimeString(Qt.locale())
+                                locale = new Date().toLocaleTimeString(Qt.locale())
                                 listModel.append({"author": "Me", "message": inputMsg.text, "date": locale})
                                 inputMsg.clear()
                             }
@@ -264,12 +282,17 @@ ApplicationWindow {
           if (data.type === "msg") {
             if(global === true) {
               var locale = new Date().toLocaleTimeString(Qt.locale())
-              listModel.append({"author": data.user, "message": data.text, "date": locale})
+              var stamp;
+              if(data.time) stamp = data.time
+              else stamp = locale
+              listModel.append({"author": data.username, "message": data.text, "date": stamp})
             }
           }
           else if (data.type === "pm") {
-            var locale = new Date().toLocaleTimeString(Qt.locale())
-            listModel.append({"author": "(PM) " + data.user, "message": data.text, "date": locale})
+            locale = new Date().toLocaleTimeString(Qt.locale())
+            if(data.time) stamp = data.time
+            else stamp = locale
+            listModel.append({"author": data.username, "message": data.text, "date": stamp})
           }
           else if(data.type === "client") {
               for(var z = 0; z < activeUsers.length; z++) {
@@ -303,4 +326,3 @@ ApplicationWindow {
         }
     }
 }
-
