@@ -146,6 +146,8 @@ ApplicationWindow {
                 }
 
                 // list of all chat messages for any given room
+                // Msg.qml
+                // I couldn't get this working separately either
                 ListView {
                     id: msgList
                     Layout.fillHeight: true
@@ -216,6 +218,8 @@ ApplicationWindow {
                     ScrollBar.vertical: ScrollBar{}
                 }
                 // pane containing the text input and the send button
+                // Text.qml
+                // Another external file I couldn't get working.
                 Pane {
                     id: pane
                     Layout.fillWidth: true
@@ -278,85 +282,22 @@ ApplicationWindow {
         }
     }
 
-    // all websocket handling occurs here
-    // I tried to have this be a component from another file
-    // It wasn't updating or using the global var properly so,
-    // I moved it back to here to avoid issues.
-    WebSocket {
-      // id is socket, which is referenced by other code
-      id: socket
-      active: true
-      url: "ws://localhost:8080"
-
-      // bulk of the handling is here
-      onTextMessageReceived: function(message){
-        // first the data is parsed
-        // similiar to the server, the data can take on many forms because of this
-        var data = JSON.parse(message);
-        // if the type is "msg"
-        // global chat
-        if (data.type === "msg") {
-          // ensures you are in global to recieve the message
-          if(global === true) {
-            // uses locale if a timestamp wasn't provided;
-            // used when bots share info
-            var locale = new Date().toLocaleTimeString(Qt.locale())
-            var stamp;
-            if(data.time) stamp = data.time
-            else stamp = locale
-            // the message model is appended with the data: author, message, and date
-            listModel.append({"author": data.username, "message": data.text, "date": stamp})
-            msgList.contentY = 10000
-          }
-        }
-        // used for personal messages
-        else if (data.type === "pm") {
-          // global is false, this prevents being PM'd in a different chat window
-          if(global === false) {
-            // uses locale if a timestamp wasn't provided;
-            locale = new Date().toLocaleTimeString(Qt.locale())
-            if(data.time) stamp = data.time
-            else stamp = locale
-            listModel.append({"author": data.username, "message": data.text, "date": stamp})
-            msgList.contentY = 10000
-          }
-        }
-        // used on client disconnect
-        // loops through the model and removes the correct user from list
-        else if(data.type === "client") {
-            for(var z = 0; z < activeUsers.length; z++) {
-                if(userModel.get(z).user === data.name) {
-                    userModel.remove(z, 1);
-                }
+    // all websocket handling occurs here from the Socket.qml file
+    // I have moved this component from a file back to here a few times
+    // it is a tad finnecky and doesn't always work perfectly when in a file
+    Socket {
+        id: socket
+        onTextMessageReceived: function(message){
+          // this statement always moves the view to the end
+          // technically it isn't a perfect solution. 
+          // If the list grows beyond 10000, this will stop working
+            var data = JSON.parse(message);
+            if (data.type === "msg" && global === true) {
+                msgList.contentY = 10000;
             }
-            // changes the active users array as well
-            for(var w = 0; w < activeUsers.length; w++) {
-              if(activeUsers[w] === data.name) {
-                activeUsers.splice(w, 1);
-              }
+            if (data.type === "pm" && global === false) {
+                msgList.contentY = 10000;
             }
         }
-        // finally, if we aren't in global, a DM, or a leaving client
-        // this is used to add new users to the list
-        else {
-          var add = true; // true until false
-          var users = JSON.parse(message);
-          for(var i = 0; i < users.length; i ++) {
-            add = true;
-            // loops through activeUsers to see if the user exists
-            for(var j = 0; j < activeUsers.length; j++) {
-              if(users[i].name === activeUsers[j]) {
-                add = false;
-              }
-            }
-            // if add is still true in the end, the user can be appended
-            // and the activeUsers gets updated
-            if(add === true) {
-              userModel.append({"user": users[i].name});
-              activeUsers[j] = users[i].name
-            }
-          }
-        }
-      }
-  }
+    }
 }

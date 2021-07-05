@@ -4,5 +4,7 @@
         <file>Users.qml</file>
         <file>Login.qml</file>
         <file>Socket.qml</file>
+        <file>Msg.qml</file>
+        <file>Text.qml</file>
     </qresource>
 </RCC>
