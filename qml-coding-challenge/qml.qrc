@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>Users.qml</file>
+        <file>Login.qml</file>
+        <file>Socket.qml</file>
     </qresource>
 </RCC>

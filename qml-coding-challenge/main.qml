@@ -19,54 +19,7 @@ ApplicationWindow {
     property bool global: true
     property var room: ({})
 
-    Popup {
-      id: popup
-      height: 340
-      width: 420
-      dim: true
-      visible: true
-      anchors.centerIn: parent
-      closePolicy: Popup.NoAutoClose
-
-          Rectangle {
-            id: rect
-            height: 340
-            width: 420
-            anchors.centerIn: parent
-            color: "steelblue"
-
-            RowLayout {
-                width: parent.width - 50
-                anchors.centerIn: parent
-
-                TextField {
-                    id: inputName
-                    placeholderText: qsTr("Type Name...")
-                    Layout.fillWidth: true
-                    wrapMode: TextArea.Wrap
-                    onAccepted: submitBtn.clicked()
-                }
-                Button {
-                    id: submitBtn
-                    text: qsTr("Submit")
-                    enabled: inputName.length > 0
-                    onClicked: {
-                        console.log("Name Submitted")
-                        myName = inputName.text
-                        var user = {
-                            type: "user",
-                            text: myName
-                        }
-                        activeUsers[0] = myName
-                        userModel.append({"user": myName})
-                        socket.sendTextMessage(JSON.stringify(user))
-                        inputName.clear()
-                        popup.close()
-                    }
-                }
-            }
-        }
-    }
+    Login {id:log}
 
     RowLayout {
         Rectangle {
@@ -125,7 +78,6 @@ ApplicationWindow {
                         listModel.clear()
                         global = false;
                         yourName = this.text
-                        console.log(yourName)
                         var chat;
                         if(myName <= yourName) chat = (myName + yourName)
                         else chat = (yourName + myName)
@@ -238,7 +190,6 @@ ApplicationWindow {
                             text: qsTr("Send")
                             enabled: inputMsg.length > 0
                             onClicked: {
-                                console.log(inputMsg.text)
                                 if(global === true) {
                                     var locale = new Date().toLocaleTimeString(Qt.locale())
                                     var msg = {
@@ -271,58 +222,5 @@ ApplicationWindow {
             }
         }
     }
-
-    WebSocket {
-        id: socket
-        active: true
-        url: "ws://localhost:8080"
-
-        onTextMessageReceived: function(message){
-          var data = JSON.parse(message);
-          if (data.type === "msg") {
-            if(global === true) {
-              var locale = new Date().toLocaleTimeString(Qt.locale())
-              var stamp;
-              if(data.time) stamp = data.time
-              else stamp = locale
-              listModel.append({"author": data.username, "message": data.text, "date": stamp})
-            }
-          }
-          else if (data.type === "pm") {
-            locale = new Date().toLocaleTimeString(Qt.locale())
-            if(data.time) stamp = data.time
-            else stamp = locale
-            listModel.append({"author": data.username, "message": data.text, "date": stamp})
-          }
-          else if(data.type === "client") {
-              for(var z = 0; z < activeUsers.length; z++) {
-                console.log("in model loop")
-                  if(userModel.get(z).user === data.name) {
-                      userModel.remove(z, 1);
-                  }
-              }
-            for(var w = 0; w < activeUsers.length; w++) {
-              if(activeUsers[w] === data.name) {
-                activeUsers.splice(w, 1);
-              }
-            }
-          }
-          else {
-            var add = true;
-            var users = JSON.parse(message);
-            for(var i = 0; i < users.length; i ++) {
-              add = true;
-              for(var j = 0; j < activeUsers.length; j++) {
-                if(users[i].name === activeUsers[j]) {
-                  add = false;
-                }
-              }
-              if(add === true) {
-                userModel.append({"user": users[i].name});
-                activeUsers[j] = users[i].name
-              }
-            }
-          }
-        }
-    }
+    Socket{id: socket}
 }

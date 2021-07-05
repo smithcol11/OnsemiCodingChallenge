@@ -1,8 +1,9 @@
 const WebSocket = require('ws');
 const uuid = require('uuid');
-const mongoose = require("mongoose");
 const User = require("./model/User");
 const Message = require("./model/Message")
+
+const mongoose = require("mongoose");
 
 require("dotenv").config();
 
@@ -23,6 +24,7 @@ mongoose.connection.once("open", () => {
   console.log("MongoDB Connected");
 });
 
+
 const wss = new WebSocket.Server({ port: 8080 });
 
 var connected_users = [];
@@ -42,7 +44,6 @@ wss.on('connection', function connection(ws, request) {
 
   ws.on('message', function incoming(message) {
     var data = JSON.parse(message);
-    console.log('Server: %s %s', data.type, data.text);
 
     if(data.type == "load") {
       console.log(data.room)
