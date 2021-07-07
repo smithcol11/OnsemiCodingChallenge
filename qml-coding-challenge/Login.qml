@@ -19,15 +19,17 @@ Popup {
 
       Rectangle {
         id: rect
+        color: "steelblue"
         height: 480
         width: 640
         anchors.centerIn: parent
-        color: "steelblue"
 
         // there is a text field and button in a row
         // the text must be filled out in order to submitBtn
         // then the popup is closed
         RowLayout {
+            Material.background: Material.Grey
+
             width: parent.width - 100
             anchors.centerIn: parent
 

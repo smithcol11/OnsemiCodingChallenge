@@ -3,6 +3,9 @@
 
 int main(int argc, char *argv[])
 {
+    // testing Material for styles
+    //qputenv("QT_QUICK_CONTROLS_STYLE", "material");
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);

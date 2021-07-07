@@ -1,6 +1,5 @@
 node_modules/
-*.mov
-*.pdf
-*.docx
-*.json
 .gitignore
+demo.mov
+Readme.docx
+Readme.pdf

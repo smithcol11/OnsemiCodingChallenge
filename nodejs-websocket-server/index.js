@@ -32,7 +32,22 @@ const wss = new WebSocket.Server({ port: 8080 });
 
 // connected users will keep track of active users
 var connected_users = [];
+// all_users keeps track of every user ever, and grabs the data from DB
+// I was planning on adding functionality for messaging online & offline users.
+// I didn't want to spend too much of my time doing tasks like this that weren't 
+// outlined. But a lot of the code to implement it is already written.
+var all_users = [];
 console.log('WebSocket Listening on port 8080');
+
+User.find((err, dat) => {
+  if(err)
+    console.log(err);
+  else
+    dat.map((d) => {
+      var user = d.username;
+      all_users.push(user);
+    }
+)})
 
 // start of connection with client
 // begins monitoring sends and requests
@@ -89,11 +104,19 @@ wss.on('connection', function connection(ws, request) {
         id: ws.client_id,
         name: data.text
       }
-      // currently this code is unused, will update to database
-      const newUser = new User({
-        username: data.text,
-      })
-      //newUser.save()
+
+      var add = true;
+      for(var i = 0; i < all_users.length; i++) {
+        if(all_users[i] == data.text) add = false;
+      }
+      if (add == true) {
+        const newUser = new User({
+          username: data.text,
+        })
+        console.log("Added user: " + newUser.username)
+        newUser.save()
+      }
+
       // this will load all messages in the global chat and display it to user
       // global is the default room everyone is loaded into
       Message.find((err, data) => {
@@ -195,6 +218,7 @@ wss.on('connection', function connection(ws, request) {
         username: "Chat Bot",
         text: user.name + " has left the chat."
       }
+      // sends to all connected clients
       wss.clients.forEach(function(client) {
         client.send(JSON.stringify(userLeave));
       })

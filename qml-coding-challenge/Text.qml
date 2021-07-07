@@ -6,6 +6,10 @@ import QtQuick.Controls 2.12
 import QtQuick.Controls.Material 2.12
 import QtQml 2.0
 
+// I intented to have this chunk of code be called from main.qml
+// I couldn't get it to work because I attempt to access id's
+// that exist in other files.
+// This was going to handle the input and button
 Pane {
   id: pane
   Layout.fillWidth: true

@@ -21,8 +21,9 @@ ApplicationWindow {
     property string yourName: "Global"
     // activeUsers is an array to populate a model
     property var activeUsers: [];
-    // global bool to help with current status
+    // global and online bool to help with current status
     property bool global: true
+    property bool online: false
     // room objects to handle PM socket
     property var room: ({})
 

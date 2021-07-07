@@ -9,6 +9,7 @@ import QtQml 2.0
 // all websocket handling occurs here
 // I have moved this component back to main.qml a few times
 // it is a tad finnecky and doesn't always work perfectly.
+// But, it works well enough to have it here for legibility
 WebSocket {
   // id is socket, which is referenced by other code
   id: socket
@@ -46,6 +47,7 @@ WebSocket {
         else stamp = locale
         listModel.append({"author": data.username, "message": data.text, "date": stamp})
         //msgList.contentY = 10000; // I have this commented to test its use in main.qml
+
       }
     }
     // used on client disconnect
