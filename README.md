@@ -8,8 +8,8 @@
 ```terminal
 npm install ws uuid mongoose websocket
 ```
-> To get the server going, you can simply type 'node index.js' in the terminal when in the nodejs folder.
-> Now, in the Qt Creator, you can simply open the .pro file for the project and it will load all the necessary files.
+> To get the server going, you can type 'node index.js' in the terminal when in the nodejs folder.
+> Now, in the Qt Creator, you can open the .pro file for the project and it will load all the necessary files.
 > Simply run the project and the first client connection will be established.
 > You can connect as many clients as you would like by clicking on Build in the toolbar and 'Run without deployment'.
 
