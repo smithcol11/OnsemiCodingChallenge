@@ -1,6 +1,7 @@
 # ON_CodingChallenge README
 > This is my coding challenge for ON Semiconductor. 
 > This build is in a pretty good spot for testing, I am still currently adding features. But I think it will demonstrate my skill level. I hope you enjoy!
+> I know some minimums was to have chatting between multiple clients and direct messages. I implemented both of these by using a global chat and list of users. You can click on the user you which to privately talk with and that room will be loaded for those two only.
 
 ## How to build and run
 > Building and running is very simple. 
