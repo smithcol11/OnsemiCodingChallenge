@@ -1,4 +1,5 @@
 # ON_CodingChallenge README
+> This is my coding challenge for ON Semiconductor. 
 > This build is in a pretty good spot for testing, I am still currently adding features. But I think it will demonstrate my skill level. I hope you enjoy!
 
 ## How to build and run
