@@ -5,7 +5,7 @@
 > Building and running is very simple. 
 > After downloading the repo, it is good to get the required node packages; NodeJS is required. A simple terminal command will get every dependancy needed.
 
-```javascript
+```terminal
 npm install ws uuid mongoose websocket
 ```
 > To get the server going, you can simply type 'node index.js' in the terminal when in the nodejs folder.
