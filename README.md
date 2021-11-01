@@ -1,7 +1,5 @@
 # ON_CodingChallenge README
-> This is my coding challenge for ON Semiconductor. 
-> This build is in a pretty good spot for testing, I am still currently adding features. But I think it will demonstrate my skill level. I hope you enjoy!
-> I know some minimums was to have chatting between multiple clients and direct messages. I implemented both of these by using a global chat and list of users. You can click on the user you which to privately talk with and that room will be loaded for those two only.
+> This is my coding challenge for ON Semiconductor Summer 2021 Internship. 
 
 ## How to build and run
 > Building and running is very simple. 
@@ -17,4 +15,5 @@ npm install ws uuid mongoose websocket
 
 ## MongoDB
 > For this, I included a .env file. It will connect and load my database from the index.js automatically when 'node index.js' is ran.
+> The .env does not contain my database info so no database will be connected. You can insert your own username and password for MongoDB to get this working.
 > So, you don't need to do anything extra for this; the dependancies are all handled by installing mongoose as shown above.
