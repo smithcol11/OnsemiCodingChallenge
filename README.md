@@ -1,4 +1,4 @@
-# ON_CodingChallenge README
+# OnsemiCodingChallenge README
 > This is my coding challenge for ON Semiconductor Summer 2021 Internship. 
 
 ## How to build and run
